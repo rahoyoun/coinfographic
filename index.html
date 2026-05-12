@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto Treemap — Live Cryptocurrency Market Visualization</title>
+<meta name="description" content="Real-time cryptocurrency market treemap. Visualize Bitcoin, Ethereum, and 240+ coins by market cap, price, volume, and 24h change. Free, live crypto heatmap.">
+<meta name="keywords" content="crypto treemap, cryptocurrency heatmap, bitcoin price, ethereum price, crypto market cap, live crypto chart, coin market visualization, BTC ETH SOL XRP, 코인 트리맵, 암호화폐, 仮想通貨, 加密货币, criptomonedas">
+<meta name="author" content="Crypto Treemap">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.memeyuyu.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.memeyuyu.com/">
+<meta property="og:title" content="Crypto Treemap — Live Cryptocurrency Market Visualization">
+<meta property="og:description" content="Real-time treemap of 240+ cryptocurrencies. Track market cap, price, volume and 24h changes at a glance.">
+<meta property="og:image" content="https://www.memeyuyu.com/og-image.png">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="zh_CN">
+<meta property="og:locale:alternate" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://www.memeyuyu.com/">
+<meta name="twitter:title" content="Crypto Treemap — Live Cryptocurrency Market Visualization">
+<meta name="twitter:description" content="Real-time treemap of 240+ cryptocurrencies.">
+<meta name="twitter:image" content="https://www.memeyuyu.com/og-image.png">
+<link rel="alternate" hreflang="en" href="https://www.memeyuyu.com/?lang=en">
+<link rel="alternate" hreflang="ko" href="https://www.memeyuyu.com/?lang=ko">
+<link rel="alternate" hreflang="ja" href="https://www.memeyuyu.com/?lang=ja">
+<link rel="alternate" hreflang="zh" href="https://www.memeyuyu.com/?lang=zh">
+<link rel="alternate" hreflang="es" href="https://www.memeyuyu.com/?lang=es">
+<link rel="alternate" hreflang="x-default" href="https://www.memeyuyu.com/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Crypto Treemap","url":"https://www.memeyuyu.com/","description":"Real-time cryptocurrency market treemap visualization for 240+ coins.","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"inLanguage":["en","ko","ja","zh","es"]}
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;display:flex;flex-direction:column}
+#wrap{display:flex;flex-direction:column;width:100%;height:100vh;padding:10px 12px 8px}
+#header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap;flex-shrink:0}
+#header-left{display:flex;align-items:baseline;gap:10px}
+#title{font-size:15px;font-weight:600;color:#f1f5f9}
+#status{font-size:11px;color:#475569}
+#header-right{display:flex;gap:6px;align-items:center}
+#lang-bar{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.lbtn{padding:3px 9px;font-size:11px;font-weight:500;border:1px solid #1e293b;border-radius:5px;background:#1e293b;color:#64748b;cursor:pointer;transition:all .12s}
+.lbtn:hover{background:#334155;color:#94a3b8}
+.lbtn.on{background:#334155;color:#f1f5f9;border-color:#475569}
+/* 핫 뉴스 버튼 */
+#hot-news-btn{padding:4px 12px;font-size:11px;font-weight:600;border:1px solid #7c3aed;border-radius:6px;background:#4c1d95;color:#ddd6fe;cursor:pointer;transition:all .12s;text-decoration:none;display:flex;align-items:center;gap:4px}
+#hot-news-btn:hover{background:#6d28d9;color:#fff}
+#controls{display:flex;flex-direction:column;gap:6px;flex-shrink:0;margin-bottom:2px}
+#metric-bar{display:flex;gap:5px;flex-wrap:wrap}
+.mbtn{padding:4px 12px;font-size:11px;font-weight:500;border:1px solid #1e293b;border-radius:6px;background:#1e293b;color:#64748b;cursor:pointer;transition:all .12s}
+.mbtn:hover{background:#334155;color:#94a3b8}
+.mbtn.on{background:#334155;color:#f1f5f9;border-color:#475569}
+#rank-bar{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+#rank-label{font-size:10px;color:#475569;margin-right:2px}
+.rbtn{padding:4px 11px;font-size:11px;font-weight:500;border:1px solid #1e293b;border-radius:6px;background:#1e293b;color:#64748b;cursor:pointer;transition:all .12s}
+.rbtn:hover{background:#334155;color:#94a3b8}
+.rbtn.on{background:#0f4c81;color:#93c5fd;border-color:#1d4ed8}
+#cat-bar{display:flex;gap:5px;flex-wrap:wrap;align-items:center;flex-shrink:0;margin-bottom:6px}
+.cbtn{padding:4px 12px;font-size:11px;font-weight:500;border-radius:6px;cursor:pointer;transition:opacity .12s,box-shadow .12s;border:none;color:#fff;opacity:.6}
+.cbtn:hover{opacity:.9}
+.cbtn.on{opacity:1;box-shadow:0 0 0 2px rgba(255,255,255,.2) inset}
+.all-cbtn{background:#1e293b!important;color:#94a3b8!important;border:1px solid #334155!important;opacity:1}
+.all-cbtn.on{background:#334155!important;color:#f1f5f9!important;border-color:#475569!important}
+.more-cbtn{background:transparent;color:#475569;border:1px solid #1e293b;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer}
+.more-cbtn:hover{background:#1e293b;color:#64748b}
+#legend{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px;flex-shrink:0}
+.leg{display:flex;align-items:center;gap:3px;font-size:10px;color:#475569}
+.ldot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+#legend-label{font-size:10px;color:#475569}
+#map{width:100%;flex:1;position:relative;overflow:hidden;border-radius:8px;min-height:0}
+.tile{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(0,0,0,.2);transition:filter .1s}
+.tile:hover{filter:brightness(1.18);z-index:20}
+.t-rank{color:rgba(255,255,255,.4);font-size:8px;line-height:1;margin-bottom:1px}
+.t-sym{font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5);white-space:nowrap;overflow:hidden;line-height:1.2}
+.t-val{color:rgba(255,255,255,.75);text-shadow:0 1px 2px rgba(0,0,0,.4);white-space:nowrap;overflow:hidden;line-height:1.2}
+.t-chg{white-space:nowrap;overflow:hidden;line-height:1.2;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.t-cat{color:rgba(255,255,255,.45);text-shadow:0 1px 2px rgba(0,0,0,.3);white-space:nowrap;overflow:hidden;font-size:9px;line-height:1.2;margin-top:1px}
+.t-hot{position:absolute;top:3px;right:3px;font-size:9px}
+
+/* 툴팁 */
+#tip{position:fixed;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:11px 14px;font-size:12px;pointer-events:none;display:none;z-index:999;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.tt-hd{font-size:13px;font-weight:600;color:#f1f5f9;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tt-badge{font-size:10px;padding:2px 7px;border-radius:99px;color:#fff;font-weight:400}
+.tt-rank{font-size:10px;color:#64748b;margin-left:auto}
+.tt-r{display:flex;justify-content:space-between;gap:20px;color:#475569;margin:3px 0;font-size:12px}
+.tt-v{color:#e2e8f0;font-weight:500}
+.tt-news-btn{display:block;margin-top:8px;padding:5px 0;text-align:center;background:#4c1d95;border:1px solid #7c3aed;border-radius:6px;color:#ddd6fe;font-size:11px;font-weight:500;cursor:pointer;text-decoration:none}
+.tt-news-btn:hover{background:#6d28d9;color:#fff}
+
+/* 뉴스 사이드 패널 */
+#news-panel{position:fixed;top:0;right:-420px;width:400px;height:100vh;background:#1e293b;border-left:1px solid #334155;z-index:1000;display:flex;flex-direction:column;transition:right .25s ease;box-shadow:-8px 0 24px rgba(0,0,0,.4)}
+#news-panel.open{right:0}
+#news-panel-header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #334155;flex-shrink:0}
+#news-panel-title{font-size:14px;font-weight:600;color:#f1f5f9;flex:1}
+#news-panel-close{background:none;border:none;color:#64748b;font-size:18px;cursor:pointer;padding:2px 6px;border-radius:4px}
+#news-panel-close:hover{background:#334155;color:#f1f5f9}
+#news-panel-body{flex:1;overflow-y:auto;padding:8px 0}
+.panel-news-item{padding:10px 16px;border-bottom:1px solid #0f172a;cursor:pointer}
+.panel-news-item:hover{background:#243554}
+.panel-news-top{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px}
+.panel-src{font-size:10px;padding:1px 6px;border-radius:3px;font-weight:500;flex-shrink:0;margin-top:1px}
+.panel-src-ko{background:#1d4ed8;color:#bfdbfe}
+.panel-src-en{background:#065f46;color:#a7f3d0}
+.panel-src-cd{background:#7c2d12;color:#fed7aa}
+.panel-title{font-size:12px;color:#e2e8f0;line-height:1.4;text-decoration:none}
+.panel-title:hover{color:#93c5fd}
+.panel-desc{font-size:11px;color:#475569;line-height:1.4;margin-bottom:2px}
+.panel-date{font-size:10px;color:#334155}
+.panel-loading{padding:20px;text-align:center;color:#475569;font-size:12px}
+.panel-more{display:block;margin:8px 16px;padding:6px;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#64748b;font-size:11px;text-decoration:none}
+.panel-more:hover{color:#94a3b8;border-color:#475569}
+#news-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:999;display:none}
+#news-overlay.open{display:block}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="header">
+    <div id="header-left">
+      <span id="title">Crypto Treemap</span>
+      <span id="status"></span>
+    </div>
+    <div id="header-right">
+      <a href="/news.html" id="hot-news-btn">🔥 Hot News</a>
+      <div id="lang-bar">
+        <button class="lbtn on" data-lang="en">EN</button>
+        <button class="lbtn" data-lang="ko">한국어</button>
+        <button class="lbtn" data-lang="ja">日本語</button>
+        <button class="lbtn" data-lang="zh">中文</button>
+        <button class="lbtn" data-lang="es">ES</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <div id="metric-bar"></div>
+    <div id="rank-bar">
+      <span id="rank-label"></span>
+      <button class="rbtn on" data-from="1"   data-to="50">1 – 50</button>
+      <button class="rbtn"    data-from="51"  data-to="100">51 – 100</button>
+      <button class="rbtn"    data-from="101" data-to="150">101 – 150</button>
+      <button class="rbtn"    data-from="151" data-to="200">151 – 200</button>
+      <button class="rbtn"    data-from="201" data-to="240">201 – 240</button>
+      <button class="rbtn"    data-from="1"   data-to="240">ALL</button>
+    </div>
+  </div>
+
+  <div id="cat-bar"></div>
+
+  <div id="legend">
+    <span id="legend-label"></span>
+    <div class="leg"><div class="ldot" style="background:#059669"></div>+5%↑</div>
+    <div class="leg"><div class="ldot" style="background:#10b981"></div>+2~5%</div>
+    <div class="leg"><div class="ldot" style="background:#34d399"></div>0~+2%</div>
+    <div class="leg"><div class="ldot" style="background:#94a3b8"></div>—</div>
+    <div class="leg"><div class="ldot" style="background:#f87171"></div>0~-2%</div>
+    <div class="leg"><div class="ldot" style="background:#ef4444"></div>-2~-5%</div>
+    <div class="leg"><div class="ldot" style="background:#b91c1c"></div>-5%↓</div>
+  </div>
+
+  <div id="map"></div>
+  <div id="tip"></div>
+</div>
+
+<!-- 뉴스 오버레이 -->
+<div id="news-overlay" onclick="closeNewsPanel()"></div>
+
+<!-- 뉴스 사이드 패널 -->
+<div id="news-panel">
+  <div id="news-panel-header">
+    <div id="news-panel-title">📰 News</div>
+    <button id="news-panel-close" onclick="closeNewsPanel()">✕</button>
+  </div>
+  <div id="news-panel-body">
+    <div class="panel-loading">Loading...</div>
+  </div>
+</div>
+
+<script>
+const I18N = {
+  en:{title:'Crypto Treemap',loading:'Loading...',sampleData:'Sample data (API connection required)',coinsLoaded:n=>`${n} coins · as of ${new Date().toLocaleTimeString('en-US')}`,noCoins:'No coins to display',legendLabel:'24h Change:',rankLabel:'Rank:',metrics:{market_cap:'📊 Market Cap',current_price:'💵 Price',price_change_percentage_24h:'📈 24h Change',total_volume:'🔄 Volume'},groups:{layer1:'Layer 1',layer2:'Layer 2',defi:'DeFi',stablecoin:'Stablecoin',meme:'Meme',ai_data:'AI / Data',nft_gaming:'NFT / Gaming',exchange:'Exchange Token',privacy:'Privacy',rwa:'RWA',infrastructure:'Infra / Oracle',other:'Other'},all:'All',more:'More ▼',less:'Less ▲',tip:{price:'Price',mcap:'Market Cap',chg:'24h Change',vol:'Volume 24h',rank:'Rank',news:'📰 View News'}},
+  ko:{title:'코인 트리맵',loading:'로딩 중...',sampleData:'샘플 데이터 (API 연결 필요)',coinsLoaded:n=>`${n}개 코인 · ${new Date().toLocaleTimeString('ko-KR')} 기준`,noCoins:'표시할 코인 없음',legendLabel:'24h 등락:',rankLabel:'시총 순위:',metrics:{market_cap:'📊 시가총액',current_price:'💵 가격',price_change_percentage_24h:'📈 등락률 24h',total_volume:'🔄 거래량'},groups:{layer1:'레이어 1',layer2:'레이어 2',defi:'DeFi',stablecoin:'스테이블코인',meme:'밈 코인',ai_data:'AI / 빅데이터',nft_gaming:'NFT / 게임',exchange:'거래소 토큰',privacy:'프라이버시',rwa:'RWA',infrastructure:'인프라 / 오라클',other:'기타'},all:'전체',more:'더보기 ▼',less:'접기 ▲',tip:{price:'가격',mcap:'시가총액',chg:'24h 등락',vol:'거래량 24h',rank:'시총 순위',news:'📰 뉴스 보기'}},
+  ja:{title:'コイン ツリーマップ',loading:'読み込み中...',sampleData:'サンプルデータ（API接続が必要）',coinsLoaded:n=>`${n}コイン · ${new Date().toLocaleTimeString('ja-JP')}時点`,noCoins:'表示するコインがありません',legendLabel:'24h 変動:',rankLabel:'時価総額順位:',metrics:{market_cap:'📊 時価総額',current_price:'💵 価格',price_change_percentage_24h:'📈 24h 変動率',total_volume:'🔄 取引量'},groups:{layer1:'レイヤー1',layer2:'レイヤー2',defi:'DeFi',stablecoin:'ステーブルコイン',meme:'ミームコイン',ai_data:'AI / データ',nft_gaming:'NFT / ゲーム',exchange:'取引所トークン',privacy:'プライバシー',rwa:'RWA',infrastructure:'インフラ / オラクル',other:'その他'},all:'全て',more:'もっと見る ▼',less:'閉じる ▲',tip:{price:'価格',mcap:'時価総額',chg:'24h 変動',vol:'出来高 24h',rank:'順位',news:'📰 ニュースを見る'}},
+  zh:{title:'加密货币树状图',loading:'加载中...',sampleData:'示例数据（需要API连接）',coinsLoaded:n=>`${n} 种币 · ${new Date().toLocaleTimeString('zh-CN')} 更新`,noCoins:'没有可显示的币种',legendLabel:'24h 涨跌:',rankLabel:'市值排名:',metrics:{market_cap:'📊 市值',current_price:'💵 价格',price_change_percentage_24h:'📈 24h 涨跌',total_volume:'🔄 交易量'},groups:{layer1:'第一层',layer2:'第二层',defi:'DeFi',stablecoin:'稳定币',meme:'模因币',ai_data:'AI / 数据',nft_gaming:'NFT / 游戏',exchange:'交易所代币',privacy:'隐私币',rwa:'RWA',infrastructure:'基础设施 / 预言机',other:'其他'},all:'全部',more:'更多 ▼',less:'收起 ▲',tip:{price:'价格',mcap:'市值',chg:'24h 涨跌',vol:'24h 成交量',rank:'排名',news:'📰 查看新闻'}},
+  es:{title:'Mapa de Criptomonedas',loading:'Cargando...',sampleData:'Datos de muestra (se requiere API)',coinsLoaded:n=>`${n} monedas · ${new Date().toLocaleTimeString('es-ES')}`,noCoins:'No hay monedas para mostrar',legendLabel:'Cambio 24h:',rankLabel:'Ranking:',metrics:{market_cap:'📊 Cap. Mercado',current_price:'💵 Precio',price_change_percentage_24h:'📈 Cambio 24h',total_volume:'🔄 Volumen'},groups:{layer1:'Capa 1',layer2:'Capa 2',defi:'DeFi',stablecoin:'Stablecoin',meme:'Meme',ai_data:'IA / Datos',nft_gaming:'NFT / Juegos',exchange:'Token de Bolsa',privacy:'Privacidad',rwa:'RWA',infrastructure:'Infra / Oráculo',other:'Otros'},all:'Todos',more:'Más ▼',less:'Menos ▲',tip:{price:'Precio',mcap:'Cap. Mercado',chg:'Cambio 24h',vol:'Volumen 24h',rank:'Ranking',news:'📰 Ver Noticias'}},
+};
+
+const GROUPS=[
+  {id:'layer1',color:'#2563EB',order:1,show:true},{id:'layer2',color:'#0891B2',order:2,show:true},
+  {id:'defi',color:'#D97706',order:3,show:true},{id:'stablecoin',color:'#059669',order:4,show:true},
+  {id:'meme',color:'#DC2626',order:5,show:true},{id:'ai_data',color:'#7C3AED',order:6,show:true},
+  {id:'nft_gaming',color:'#EA580C',order:7,show:false},{id:'exchange',color:'#1E293B',order:8,show:false},
+  {id:'privacy',color:'#64748B',order:9,show:false},{id:'rwa',color:'#0F766E',order:10,show:false},
+  {id:'infrastructure',color:'#B45309',order:11,show:false},{id:'other',color:'#6B7280',order:99,show:false},
+];
+const CMAP={'bitcoin':'layer1','ethereum':'layer1','solana':'layer1','ripple':'layer1','cardano':'layer1','avalanche':'layer1','tron':'layer1','near-protocol':'layer1','aptos':'layer1','cosmos':'layer1','polkadot':'layer1','matic-network':'layer2','arbitrum':'layer2','optimism':'layer2','immutable-x':'layer2','starknet':'layer2','uniswap':'defi','aave':'defi','chainlink':'defi','maker':'defi','lido-dao':'defi','curve-dao-token':'defi','pancakeswap':'defi','tether':'stablecoin','usd-coin':'stablecoin','dai':'stablecoin','first-digital-usd':'stablecoin','trueusd':'stablecoin','dogecoin':'meme','shiba-inu':'meme','pepe':'meme','bonk':'meme','dogwifhat':'meme','fetch':'ai_data','render':'ai_data','worldcoin-wld':'ai_data','axie-infinity':'nft_gaming','the-sandbox':'nft_gaming','decentraland':'nft_gaming','binancecoin':'exchange','okb':'exchange','crypto-com-chain':'exchange','kucoin-shares':'exchange','monero':'privacy','zcash':'privacy','dash':'privacy','filecoin':'infrastructure','the-graph':'infrastructure','helium':'infrastructure','litecoin':'other','bitcoin-cash':'other','ethereum-classic':'other'};
+
+const WORKERS_URL = 'https://super-pine-8cee.ghdbsfk.workers.dev';
+const NEWS_URL    = 'https://dark-silence-abb2.ghdbsfk.workers.dev';
+
+let coins=[], metric='market_cap', activeCat='all', showMore=false;
+let rankFrom=1, rankTo=50;
+
+function detectLang(){const p=new URLSearchParams(location.search).get('lang');if(p&&I18N[p])return p;const bl=(navigator.language||'en').slice(0,2);return I18N[bl]?bl:'en';}
+let lang=detectLang();
+const t=()=>I18N[lang];
+
+const chColor=v=>{if(v>5)return'#059669';if(v>2)return'#10b981';if(v>.3)return'#34d399';if(v>-.3)return'#94a3b8';if(v>-2)return'#f87171';if(v>-5)return'#ef4444';return'#b91c1c';};
+const gColor=id=>(GROUPS.find(g=>g.id===(CMAP[id]||'other'))||{color:'#6B7280'}).color;
+const gLabel=id=>t().groups[CMAP[id]||'other']||t().groups.other;
+const gId=id=>CMAP[id]||'other';
+const fmtNum=(c,m)=>{if(m==='market_cap')return'$'+(c[m]/1e9).toFixed(1)+'B';if(m==='current_price')return c[m]<0.01?'$'+c[m].toFixed(5):'$'+c[m].toLocaleString('en',{maximumFractionDigits:2});if(m==='price_change_percentage_24h')return(c[m]>=0?'+':'')+c[m].toFixed(2)+'%';if(m==='total_volume')return'$'+(c[m]/1e9).toFixed(2)+'B';};
+
+/* 뉴스 패널 */
+function openNewsPanel(coin) {
+  const panel = document.getElementById('news-panel');
+  const body  = document.getElementById('news-panel-body');
+  const title = document.getElementById('news-panel-title');
+  document.getElementById('news-overlay').classList.add('open');
+
+  title.textContent = `📰 ${coin.symbol} · ${coin.name}`;
+  body.innerHTML = '<div class="panel-loading">Loading news...</div>';
+  panel.classList.add('open');
+
+  fetch(`${NEWS_URL}/?symbol=${coin.symbol}&name=${encodeURIComponent(coin.name)}`)
+    .then(r => r.json())
+    .then(data => {
+      const news = data.news || [];
+      if (!news.length) {
+        body.innerHTML = '<div class="panel-loading">No news found</div>';
+        return;
+      }
+      body.innerHTML = news.map(n => `
+        <div class="panel-news-item">
+          <div class="panel-news-top">
+            <span class="panel-src ${n.source?.includes('KR') ? 'panel-src-ko' : n.source?.includes('CoinDesk') ? 'panel-src-cd' : 'panel-src-en'}">${n.source?.includes('KR') ? 'KR' : n.source?.includes('CoinDesk') ? 'CD' : 'EN'}</span>
+            <a href="${n.link}" target="_blank" rel="noopener" class="panel-title">${n.title}</a>
+          </div>
+          ${n.desc ? `<div class="panel-desc">${n.desc}</div>` : ''}
+          <div class="panel-date">${timeAgo(n.date)}</div>
+        </div>
+      `).join('') + `<a href="/news.html?symbol=${coin.symbol}&name=${encodeURIComponent(coin.name)}" class="panel-more">More news →</a>`;
+    })
+    .catch(() => { body.innerHTML = '<div class="panel-loading">Failed to load news</div>'; });
+}
+
+function closeNewsPanel() {
+  document.getElementById('news-panel').classList.remove('open');
+  document.getElementById('news-overlay').classList.remove('open');
+}
+
+function timeAgo(iso) {
+  const diff = (Date.now() - new Date(iso)) / 1000;
+  if (diff < 60) return `${Math.floor(diff)}s ago`;
+  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+  return `${Math.floor(diff/86400)}d ago`;
+}
+
+/* Squarify */
+function squarify(items,x,y,w,h){if(!items.length)return[];return _layout(items.map(i=>({...i})),x,y,w,h);}
+function _layout(items,x,y,w,h){if(!items.length)return[];if(items.length===1)return[{...items[0],x,y,w,h}];const tot=items.reduce((s,i)=>s+i.a,0);let best=1,bR=Infinity;for(let n=1;n<=items.length;n++){const r=_worst(items.slice(0,n),w,h,tot);if(r<bR){bR=r;best=n;}else break;}const row=items.slice(0,best),rest=items.slice(best);const rA=row.reduce((s,i)=>s+i.a,0),frac=rA/tot;let rects,nx,ny,nw,nh;if(w>=h){const cw=w*frac;rects=_place(row,x,y,cw,h,false);nx=x+cw;ny=y;nw=w-cw;nh=h;}else{const rh=h*frac;rects=_place(row,x,y,w,rh,true);nx=x;ny=y+rh;nw=w;nh=h-rh;}if(!rest.length)return rects;const na=nw*nh,rt=rest.reduce((s,i)=>s+i.a,0);return[...rects,..._layout(rest.map(i=>({...i,a:i.a/rt*na})),nx,ny,nw,nh)];}
+function _worst(row,w,h,tot){const rA=row.reduce((s,i)=>s+i.a,0),side=w>=h?h:w,rW=rA/tot*(w>=h?w:h);return row.reduce((m,i)=>{const iH=(i.a/rA)*side;return Math.max(m,Math.max(rW/iH,iH/rW));},0);}
+function _place(row,x,y,w,h,hz){const tot=row.reduce((s,i)=>s+i.a,0);let cx=x,cy=y;return row.map(i=>{const f=i.a/tot;const r=hz?{...i,x:cx,y:cy,w:w*f,h}:{...i,x:cx,y:cy,w,h:h*f};hz?cx+=w*f:cy+=h*f;return r;});}
+
+function buildRankBar(){
+  document.getElementById('rank-label').textContent=t().rankLabel;
+  document.querySelectorAll('.rbtn').forEach(b=>{
+    const from=parseInt(b.dataset.from),to=parseInt(b.dataset.to);
+    b.classList.toggle('on',from===rankFrom&&to===rankTo);
+    b.onclick=()=>{rankFrom=from;rankTo=to;document.querySelectorAll('.rbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');render();};
+  });
+}
+
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.title=t().title+' — Live Cryptocurrency Market Visualization';
+  document.getElementById('title').textContent=t().title;
+  document.getElementById('legend-label').textContent=t().legendLabel;
+  const mb=document.getElementById('metric-bar');mb.innerHTML='';
+  Object.entries(t().metrics).forEach(([key,label])=>{
+    const b=document.createElement('button');b.className='mbtn'+(metric===key?' on':'');b.dataset.m=key;b.textContent=label;
+    b.addEventListener('click',()=>{metric=key;document.querySelectorAll('.mbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');render();});
+    mb.appendChild(b);
+  });
+  document.querySelectorAll('.lbtn').forEach(b=>b.classList.toggle('on',b.dataset.lang===lang));
+  buildRankBar();buildCatBar();render();
+}
+
+function buildCatBar(){
+  const bar=document.getElementById('cat-bar');bar.innerHTML='';
+  const sorted=[...GROUPS].sort((a,b)=>a.order-b.order);
+  const visible=showMore?sorted:sorted.filter(g=>g.show);
+  const all=document.createElement('button');all.className='cbtn all-cbtn'+(activeCat==='all'?' on':'');all.textContent=t().all;
+  all.onclick=()=>{activeCat='all';buildCatBar();render();};bar.appendChild(all);
+  visible.forEach(g=>{
+    const b=document.createElement('button');b.className='cbtn'+(activeCat===g.id?' on':'');b.style.background=g.color;b.textContent=t().groups[g.id];
+    b.onclick=()=>{activeCat=g.id;buildCatBar();render();};bar.appendChild(b);
+  });
+  if(sorted.some(g=>!g.show)){const m=document.createElement('button');m.className='more-cbtn';m.textContent=showMore?t().less:t().more;m.onclick=()=>{showMore=!showMore;buildCatBar();};bar.appendChild(m);}
+}
+
+function render(){
+  const container=document.getElementById('map');container.innerHTML='';
+  const W=container.offsetWidth||window.innerWidth;
+  const H=container.offsetHeight||500;
+  let data=coins.filter(c=>{const rank=c.market_cap_rank||999;return rank>=rankFrom&&rank<=rankTo;});
+  if(activeCat!=='all')data=data.filter(c=>gId(c.id)===activeCat);
+  data=data.filter(c=>c[metric]!=null&&Math.abs(c[metric])>0);
+  if(!data.length){container.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#475569;font-size:14px">${t().noCoins}</div>`;return;}
+  data.sort((a,b)=>Math.abs(b[metric])-Math.abs(a[metric]));
+  const tot=data.reduce((s,c)=>s+Math.abs(c[metric]),0);
+  const items=data.map(c=>({coin:c,a:Math.abs(c[metric])/tot*W*H}));
+  const rects=squarify(items,0,0,W,H);
+  const tip=document.getElementById('tip');
+
+  rects.forEach(r=>{
+    const c=r.coin,ch=c.price_change_percentage_24h||0;
+    const isHot=ch>=10;
+    const el=document.createElement('div');el.className='tile';
+    el.style.cssText=`left:${r.x+.5}px;top:${r.y+.5}px;width:${Math.max(r.w-1,2)}px;height:${Math.max(r.h-1,2)}px;background:${gColor(c.id)};border-bottom:3px solid ${chColor(ch)}${isHot?';box-shadow:inset 0 0 0 2px rgba(251,191,36,.4)':''}`;
+    const minD=Math.min(r.w,r.h);
+    if(isHot&&minD>30){const hot=document.createElement('div');hot.className='t-hot';hot.textContent='🔥';el.appendChild(hot);}
+    if(minD>50&&c.market_cap_rank){const rk=document.createElement('div');rk.className='t-rank';rk.textContent='#'+c.market_cap_rank;el.appendChild(rk);}
+    if(minD>24){const s=document.createElement('div');s.className='t-sym';s.style.fontSize=Math.min(Math.max(minD*.24,10),22)+'px';s.textContent=c.symbol.toUpperCase();el.appendChild(s);}
+    if(minD>42){const v=document.createElement('div');v.className='t-val';v.style.fontSize=Math.min(Math.max(minD*.16,9),14)+'px';v.textContent=fmtNum(c,metric);el.appendChild(v);}
+    if(minD>64&&metric!=='price_change_percentage_24h'){const cv=c.price_change_percentage_24h||0;const ce=document.createElement('div');ce.className='t-chg';ce.style.fontSize=Math.min(Math.max(minD*.14,8),12)+'px';ce.style.color=chColor(cv)+'dd';ce.textContent=(cv>=0?'▲':'▼')+Math.abs(cv).toFixed(2)+'%';el.appendChild(ce);}
+    if(minD>80&&activeCat==='all'){const cat=document.createElement('div');cat.className='t-cat';cat.textContent=gLabel(c.id);el.appendChild(cat);}
+
+    el.addEventListener('mouseenter',()=>{
+      const cv=c.price_change_percentage_24h||0;tip.style.display='block';
+      tip.innerHTML=`<div class="tt-hd">${c.name}<span style="color:#475569;font-size:11px;font-weight:400">${c.symbol.toUpperCase()}</span><span class="tt-rank">#${c.market_cap_rank||'?'}</span></div><div style="margin-bottom:6px"><span class="tt-badge" style="background:${gColor(c.id)}">${gLabel(c.id)}</span>${isHot?'<span style="margin-left:4px;font-size:10px">🔥 +10%</span>':''}</div><div class="tt-r"><span>${t().tip.price}</span><span class="tt-v">${fmtNum(c,'current_price')}</span></div><div class="tt-r"><span>${t().tip.mcap}</span><span class="tt-v">${fmtNum(c,'market_cap')}</span></div><div class="tt-r"><span>${t().tip.chg}</span><span class="tt-v" style="color:${chColor(cv)}">${(cv>=0?'+':'')+cv.toFixed(2)+'%'}</span></div><div class="tt-r"><span>${t().tip.vol}</span><span class="tt-v">${fmtNum(c,'total_volume')}</span></div><div style="margin-top:8px;font-size:10px;color:#475569">클릭하면 뉴스 패널 열림</div>`;
+    });
+    el.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';});
+    el.addEventListener('mouseleave',()=>tip.style.display='none');
+
+    // 클릭하면 뉴스 패널 열기
+    el.addEventListener('click',()=>{
+      tip.style.display='none';
+      openNewsPanel(c);
+    });
+
+    container.appendChild(el);
+  });
+}
+
+async function load(){
+  const status=document.getElementById('status');
+  status.textContent=t().loading;
+  try{
+    const r=await fetch(WORKERS_URL);
+    if(!r.ok)throw 0;
+    coins=await r.json();
+    coins.forEach(c=>{if(!CMAP[c.id])CMAP[c.id]='other';});
+    status.textContent=t().coinsLoaded(coins.length);
+  }catch{
+    status.textContent=t().sampleData;
+    coins=[];
+  }
+  applyLang();
+}
+
+document.querySelectorAll('.lbtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    lang=b.dataset.lang;
+    const url=new URL(location);url.searchParams.set('lang',lang);history.replaceState(null,'',url);
+    applyLang();
+  });
+});
+window.addEventListener('resize',()=>render());
+load();
+</script>
+</body>
+</html>
