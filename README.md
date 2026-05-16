@@ -1,69 +1,71 @@
-# 코인 트리맵
+# 코인 트리맵 — Cloudflare 풀스택 버전
 
-실시간 코인 시가총액 트리맵. Next.js + Vercel Postgres 기반.
+Next.js + Cloudflare Pages + Cloudflare D1 (SQLite)
 
 ---
 
-## 프로젝트 구조
+## 구조
 
 ```
 coin-treemap/
 ├── app/
-│   ├── page.tsx                  # 메인 트리맵 UI
-│   ├── layout.tsx
-│   ├── globals.css
+│   ├── page.tsx                  # 트리맵 UI
+│   ├── layout.tsx                # SEO 메타태그 (한/영/일)
+│   ├── sitemap.ts                # 자동 sitemap.xml
+│   ├── robots.ts                 # 자동 robots.txt
+│   ├── en/page.tsx               # 영어 페이지
+│   ├── ja/page.tsx               # 일본어 페이지
 │   └── api/
-│       ├── coins/route.ts        # 시세 + DB 카테고리 합성 API
-│       └── categories/route.ts  # 카테고리 CRUD API
-├── lib/
-│   └── db.ts                     # Vercel Postgres 쿼리 헬퍼
-├── types/
-│   └── index.ts                  # 공통 타입 정의
-├── sql/
-│   └── init.sql                  # DB 초기화 SQL
-└── .env.local.example            # 환경변수 예시
+│       ├── coins/route.ts        # 시세 + D1 카테고리 합성
+│       └── categories/route.ts  # 카테고리 CRUD
+├── lib/db.ts                     # Cloudflare D1 쿼리
+├── types/index.ts                # 타입 정의
+├── sql/init.sql                  # D1 초기화 SQL (SQLite)
+├── wrangler.jsonc                # Cloudflare 설정
+└── open-next.config.ts           # OpenNext 어댑터 설정
 ```
 
 ---
 
-## 로컬 개발 시작
+## 처음 시작하기
 
+### 1. 의존성 설치
 ```bash
-# 1. 의존성 설치
 npm install
-
-# 2. 환경변수 설정
-cp .env.local.example .env.local
-# .env.local에 Vercel Postgres 연결 정보 입력
-
-# 3. DB 초기화 (Vercel Postgres 대시보드 쿼리창에 sql/init.sql 붙여넣기)
-
-# 4. 개발 서버 실행
-npm run dev
 ```
 
----
-
-## Vercel 배포
-
+### 2. D1 데이터베이스 생성
 ```bash
-# 1. Vercel CLI 설치
-npm i -g vercel
-
-# 2. 배포
-vercel
-
-# 3. Vercel 대시보드 → Storage → Postgres DB 생성
-#    → 프로젝트에 연결하면 환경변수 자동 주입
+npx wrangler d1 create coin-treemap-db
 ```
+출력된 `database_id`를 `wrangler.jsonc`에 붙여넣기
+
+### 3. DB 초기화
+```bash
+# 로컬 테스트용
+npm run db:init
+
+# 실제 Cloudflare D1에 적용
+npm run db:init:remote
+```
+
+### 4. 로컬 개발
+```bash
+cp .dev.vars.example .dev.vars
+npm run preview   # Cloudflare 환경으로 로컬 실행
+```
+
+### 5. 배포
+```bash
+npm run deploy
+```
+Cloudflare Pages에 자동 배포 + 도메인 연결은 Cloudflare 대시보드에서
 
 ---
 
 ## API 교체 방법
 
-나중에 직접 만든 시세 API로 바꿀 때:
-
-`app/api/coins/route.ts` 상단 `MARKET_API` URL만 교체
+`app/api/coins/route.ts` 상단 `MARKET_API` URL만 교체:
 
 ```ts
 // 현재 (CoinGecko)
@@ -73,8 +75,7 @@ const MARKET_API = 'https://api.coingecko.com/api/v3/coins/markets?...';
 const MARKET_API = 'https://내도메인.com/api/market-data';
 ```
 
-응답 포맷은 아래를 맞춰주면 됩니다:
-
+응답 포맷:
 ```json
 [
   {
@@ -91,22 +92,27 @@ const MARKET_API = 'https://내도메인.com/api/market-data';
 
 ---
 
-## DB 스키마
+## D1 직접 수정 (카테고리/코인 추가)
 
-### categories
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| id | VARCHAR(50) | 고유 키 (예: layer1) |
-| label | VARCHAR(100) | 화면 표시 이름 |
-| color | VARCHAR(7) | 타일 색상 (#2563EB) |
-| order | INT | 버튼 정렬 순서 |
-| show_on_start | BOOLEAN | 초기 화면 노출 여부 |
+```bash
+# 카테고리 추가
+npx wrangler d1 execute coin-treemap-db --remote --command \
+  "INSERT INTO categories (id,label,color,\"order\",show_on_start) VALUES ('new_cat','새카테고리','#FF0000',12,0)"
 
-### coin_mappings
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| coingecko_id | VARCHAR(100) | CoinGecko 코인 ID |
-| symbol | VARCHAR(20) | 티커 (BTC) |
-| name | VARCHAR(100) | 코인 이름 |
-| category_id | VARCHAR(50) | categories.id 참조 |
-| priority | INT | 그룹 내 정렬 우선순위 |
+# 코인 매핑 추가
+npx wrangler d1 execute coin-treemap-db --remote --command \
+  "INSERT OR REPLACE INTO coin_mappings (coingecko_id,symbol,name,category_id,priority) VALUES ('sui','SUI','Sui','layer1',12)"
+```
+
+---
+
+## 기술 스택
+
+| 역할 | 기술 |
+|------|------|
+| 프레임워크 | Next.js 14 |
+| 배포 | Cloudflare Pages |
+| DB | Cloudflare D1 (SQLite) |
+| API 런타임 | Cloudflare Edge Runtime |
+| 어댑터 | @opennextjs/cloudflare |
+| 스타일 | Tailwind CSS |

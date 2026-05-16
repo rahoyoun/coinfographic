@@ -1,53 +1,49 @@
 -- ============================================================
--- 실행 방법:
---   Vercel Postgres 대시보드 쿼리창 또는
---   psql $POSTGRES_URL < sql/init.sql
+-- Cloudflare D1 (SQLite) 초기화
+-- 실행: npm run db:init          (로컬 테스트)
+--       npm run db:init:remote   (실제 D1 DB)
 -- ============================================================
 
--- 카테고리 그룹 테이블
 CREATE TABLE IF NOT EXISTS categories (
-  id            VARCHAR(50)  PRIMARY KEY,
-  label         VARCHAR(100) NOT NULL,
-  color         VARCHAR(7)   NOT NULL DEFAULT '#6B7280',
-  "order"       INT          NOT NULL DEFAULT 99,
-  show_on_start BOOLEAN      NOT NULL DEFAULT FALSE,
-  created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+  id            TEXT    PRIMARY KEY,
+  label         TEXT    NOT NULL,
+  color         TEXT    NOT NULL DEFAULT '#6B7280',
+  "order"       INTEGER NOT NULL DEFAULT 99,
+  show_on_start INTEGER NOT NULL DEFAULT 0,  -- 0=false, 1=true
+  created_at    TEXT    NOT NULL DEFAULT (datetime('now')),
+  updated_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
--- 코인 매핑 테이블
 CREATE TABLE IF NOT EXISTS coin_mappings (
-  coingecko_id  VARCHAR(100) PRIMARY KEY,
-  symbol        VARCHAR(20)  NOT NULL,
-  name          VARCHAR(100) NOT NULL,
-  category_id   VARCHAR(50)  NOT NULL REFERENCES categories(id) ON DELETE SET NULL,
-  priority      INT          NOT NULL DEFAULT 99,
-  created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+  coingecko_id  TEXT    PRIMARY KEY,
+  symbol        TEXT    NOT NULL,
+  name          TEXT    NOT NULL,
+  category_id   TEXT    NOT NULL REFERENCES categories(id),
+  priority      INTEGER NOT NULL DEFAULT 99,
+  created_at    TEXT    NOT NULL DEFAULT (datetime('now')),
+  updated_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
--- 인덱스
 CREATE INDEX IF NOT EXISTS idx_coin_mappings_category ON coin_mappings(category_id);
 CREATE INDEX IF NOT EXISTS idx_categories_order       ON categories("order");
 
--- ── 기본 카테고리 데이터 삽입 ────────────────────────────
-INSERT INTO categories (id, label, color, "order", show_on_start) VALUES
-  ('layer1',        '레이어 1',        '#2563EB', 1,  TRUE),
-  ('layer2',        '레이어 2',         '#0891B2', 2,  TRUE),
-  ('defi',          'DeFi',            '#D97706', 3,  TRUE),
-  ('stablecoin',    '스테이블코인',     '#059669', 4,  TRUE),
-  ('meme',          '밈 코인',          '#DC2626', 5,  TRUE),
-  ('ai_data',       'AI / 빅데이터',    '#7C3AED', 6,  TRUE),
-  ('nft_gaming',    'NFT / 게임',       '#EA580C', 7,  FALSE),
-  ('exchange',      '거래소 토큰',       '#1E293B', 8,  FALSE),
-  ('privacy',       '프라이버시',        '#64748B', 9,  FALSE),
-  ('rwa',           'RWA',             '#0F766E', 10, FALSE),
-  ('infrastructure','인프라 / 오라클',  '#B45309', 11, FALSE),
-  ('other',         '기타',            '#6B7280', 99, FALSE)
-ON CONFLICT (id) DO NOTHING;
+-- ── 기본 카테고리 ────────────────────────────────────────
+INSERT OR IGNORE INTO categories (id, label, color, "order", show_on_start) VALUES
+  ('layer1',        '레이어 1',        '#2563EB', 1,  1),
+  ('layer2',        '레이어 2',         '#0891B2', 2,  1),
+  ('defi',          'DeFi',            '#D97706', 3,  1),
+  ('stablecoin',    '스테이블코인',     '#059669', 4,  1),
+  ('meme',          '밈 코인',          '#DC2626', 5,  1),
+  ('ai_data',       'AI / 빅데이터',    '#7C3AED', 6,  1),
+  ('nft_gaming',    'NFT / 게임',       '#EA580C', 7,  0),
+  ('exchange',      '거래소 토큰',       '#1E293B', 8,  0),
+  ('privacy',       '프라이버시',        '#64748B', 9,  0),
+  ('rwa',           'RWA',             '#0F766E', 10, 0),
+  ('infrastructure','인프라 / 오라클',  '#B45309', 11, 0),
+  ('other',         '기타',            '#6B7280', 99, 0);
 
--- ── 기본 코인 매핑 데이터 삽입 ──────────────────────────
-INSERT INTO coin_mappings (coingecko_id, symbol, name, category_id, priority) VALUES
+-- ── 기본 코인 매핑 ──────────────────────────────────────
+INSERT OR IGNORE INTO coin_mappings (coingecko_id, symbol, name, category_id, priority) VALUES
   ('bitcoin',       'BTC',  'Bitcoin',       'layer1',        1),
   ('ethereum',      'ETH',  'Ethereum',      'layer1',        2),
   ('solana',        'SOL',  'Solana',        'layer1',        3),
@@ -83,5 +79,4 @@ INSERT INTO coin_mappings (coingecko_id, symbol, name, category_id, priority) VA
   ('monero',        'XMR',  'Monero',        'privacy',       1),
   ('filecoin',      'FIL',  'Filecoin',      'infrastructure',1),
   ('the-graph',     'GRT',  'The Graph',     'infrastructure',2),
-  ('litecoin',      'LTC',  'Litecoin',      'other',         1)
-ON CONFLICT (coingecko_id) DO NOTHING;
+  ('litecoin',      'LTC',  'Litecoin',      'other',         1);

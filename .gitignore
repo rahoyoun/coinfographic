@@ -1,7 +1,10 @@
 .next/
+.open-next/
 node_modules/
+.dev.vars
 .env.local
 .env
 *.log
 .DS_Store
 dist/
+.wrangler/

@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { getCategories, upsertCategory } from '@/lib/db';
 import type { Category } from '@/types';
 
-// GET /api/categories
+export const runtime = 'edge';
+
 export async function GET() {
   try {
     const categories = await getCategories();
@@ -13,7 +14,6 @@ export async function GET() {
   }
 }
 
-// POST /api/categories  (upsert)
 export async function POST(req: Request) {
   try {
     const body: Category = await req.json();

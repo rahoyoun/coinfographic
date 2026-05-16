@@ -7,13 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:migrate": "node scripts/migrate.js"
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "db:init": "wrangler d1 execute coin-treemap-db --local --file=sql/init.sql",
+    "db:init:remote": "wrangler d1 execute coin-treemap-db --remote --file=sql/init.sql"
   },
   "dependencies": {
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18",
-    "@vercel/postgres": "^0.9.0"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -24,6 +26,8 @@
     "postcss": "^8",
     "autoprefixer": "^10",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3"
+    "eslint-config-next": "14.2.3",
+    "@opennextjs/cloudflare": "^1.19.9",
+    "wrangler": "^4.0.0"
   }
 }
