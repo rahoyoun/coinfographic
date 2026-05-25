@@ -3,6 +3,7 @@ import requests
 import re
 from urllib.parse import urlparse, unquote
 import os
+import mimetypes
 
 app = Flask(__name__)
 
@@ -26,8 +27,8 @@ def guess_filename(url: str, content_type: str) -> str:
     # URL에서 파일명 추출
     path = unquote(urlparse(url).path)
     name = os.path.basename(path)
-    if name and "." in name:
-        return name
+    if not name:
+        name= "download"
 
     # 확장자 추측
     ext_map = {
@@ -36,7 +37,8 @@ def guess_filename(url: str, content_type: str) -> str:
         "image/jpeg": ".jpg", "image/png": ".png", "image/gif": ".gif",
         "image/webp": ".webp", "application/pdf": ".pdf",
     }
-    ext = ext_map.get(content_type.split(";")[0].strip(), ".bin")
+    ext = mimetypes.guess_extension(content_type)
+    #ext = ext_map.get(content_type.split(";")[0].strip(), ".bin")
     return f"download{ext}"
 
 
