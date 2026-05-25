@@ -6,7 +6,7 @@ app = Flask(__name__)
 def home():
     return render_template(
         "index.html",
-        message="Coinfographic Flask Server Running"
+        message="Coinfographic Flask Server Running!!!!@!@!@"
     )
 
 if __name__ == "__main__":
